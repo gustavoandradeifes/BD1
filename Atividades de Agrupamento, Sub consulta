@@ -1,0 +1,74 @@
+Exercícios de Agrupamento:
+
+1. select relacao from dependente group by relacao 
+
+
+
+2. select sexo from dependente group by sexo 
+
+
+
+3. select sexo, count(*) from dependente group by sexo
+
+
+
+4. SELECT MAX(salario) FROM empregado
+
+
+
+5. SELECT MIN(salario) FROM empregado
+
+
+6. SELECT SUM(salario) FROM empregado
+
+
+7. SELECT SUM(CASE WHEN departamento.numero = 1 THEN empregado.salario ELSE 0 END) as Departamento_1, SUM(CASE WHEN departamento.numero = 2 THEN empregado.salario ELSE 0 END) as Departamento_2, SUM(CASE WHEN departamento.numero = 3 THEN empregado.salario ELSE 0 END) as Departamento_3, SUM(CASE WHEN departamento.numero = 4 THEN empregado.salario ELSE 0 END) as Departamento_4 from empregado inner join departamento on (empregado.depto = departamento.numero)
+https://prnt.sc/u0art4
+
+
+
+8. select AVG(salario) as media, sum(salario) as soma, max(salario) as maior_salario, min(salario) as menor_salario, STDDEV(salario) as desvio from empregado
+
+
+
+Exercícios de Agrupamento com Junção
+
+1.select empregado.nome, count(empregado.rg) as numero_dependentes from empregado inner join dependente on (dependente.rg_responsavel = empregado.rg) group by empregado.nome
+
+
+2. select empregado.nome, count(empregado.rg) as numero_projetos from empregado inner join empregado_projeto on (empregado_projeto.rg_empregado = empregado.rg) group by empregado.nome
+
+
+3. select empregado.nome, count(empregado_projeto.rg_empregado) as numero_projetos from empregado inner join empregado_projeto on (empregado_projeto.rg_empregado = empregado.rg) group by empregado.nome
+
+
+4. select departamento.numero, count(empregado.depto) as qtd from departamento inner join empregado on (empregado.depto = departamento.numero) group by departamento.numero
+
+
+5. select departamento.nome, count(empregado.depto) as qtd from departamento inner join empregado on (empregado.depto = departamento.numero) group by departamento.numero having count(empregado.depto)>2
+https://prnt.sc/u0bo91
+
+
+6. select departamento.nome, sum(empregado.salario) as salario_total from departamento inner join empregado on (empregado.depto = departamento.numero) group by departamento.numero having sum(empregado.salario)>6000
+
+
+
+Exercícios de Subconsulta:
+
+1. select empregado.nome, empregado.rg, empregado.cpf, empregado.depto from empregado inner join departamento on (empregado.rg = departamento.rg_gerente) where salario>(select avg(salario) from empregado)
+
+
+2. select empregado.nome, empregado.rg, empregado.cpf,empregado.salario,  empregado.depto, avg(empregado.salario) from empregado inner join departamento on (empregado.rg = departamento.rg_gerente) where salario>(select avg(salario) from empregado) group by empregado.rg
+
+
+3. select nome, rg from empregado where rg not in (select rg from historico_salario)
+
+4. select * from empregado where salario > (select avg(salario) from empregado)
+
+
+5. select * from empregado where (salario > ((select min(salario) from empregado)+1000) and salario < ((select avg(salario) from empregado)+1000))
+https://prnt.sc/u0boff
+
+6. select * from empregado where (salario > (select avg(salario) from empregado) and salario < (select stddev(salario) from empregado))
+
+7. select empregado.nome, count(empregado_projeto.rg_empregado) from empregado inner join empregado_projeto on (empregado.rg = empregado_projeto.rg_empregado) where empregado.rg in (select rg_gerente from departamento) group by empregado.nome
